@@ -1,0 +1,22 @@
+# Dependency directories
+node_modules/
+
+# Build artifacts
+dist/
+
+# Configuration and environment secrets
+.env
+.env*
+.api-key
+data/
+
+# Session images and debug logs
+qr.png
+*.log
+
+# Internal documentation
+.explanation
+
+# OS files
+.DS_Store
+Thumbs.db
