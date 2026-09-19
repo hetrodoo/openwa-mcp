@@ -96,6 +96,42 @@ The production output will compile cleanly into the `dist/index.js` bundle direc
 
 ---
 
+## 🐳 Docker (Streamable HTTP)
+
+The Docker image wraps the stdio server with [supergateway](https://github.com/supercorp-ai/supergateway) and serves it over Streamable HTTP at `http://<host>:8000/mcp`. There is no authentication, so keep the port on a trusted network.
+
+```bash
+docker compose up -d --build
+```
+
+Compose reads `OPENWA_BASE_URL` and `OPENWA_API_KEY` from your `.env`. Inside the container `localhost` is the container itself, so `OPENWA_BASE_URL` defaults to `http://host.docker.internal:2785/api` to reach an OpenWA instance running on the host. If OpenWA runs in another container, point it at that service name instead.
+
+Without compose:
+
+```bash
+docker build -t openwa-mcp .
+docker run -d -p 8000:8000 \
+  -e OPENWA_BASE_URL=http://host.docker.internal:2785/api \
+  -e OPENWA_API_KEY=your_secure_api_key_here \
+  --add-host host.docker.internal:host-gateway \
+  openwa-mcp
+```
+
+A health check is served at `/healthz`. Point HTTP-capable clients at the endpoint, e.g. Claude Code's `.mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "openwa": {
+      "type": "http",
+      "url": "http://localhost:8000/mcp"
+    }
+  }
+}
+```
+
+---
+
 ## 🚀 AI Agent Integrations
 
 To load the OpenWA MCP server into your favorite developer environment, reference the standard JSON-RPC launch config.

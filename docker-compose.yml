@@ -1,0 +1,11 @@
+services:
+  openwa-mcp:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      OPENWA_BASE_URL: ${OPENWA_BASE_URL:-http://host.docker.internal:2785/api}
+      OPENWA_API_KEY: ${OPENWA_API_KEY:-}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped
