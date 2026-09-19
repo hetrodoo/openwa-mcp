@@ -59,14 +59,14 @@ export function registerGroupTools(server: McpServer) {
       inputSchema: {
         sessionId: z.string().describe("Session ID"),
         groupId: z.string().describe("Group ID"),
-        participantId: z.string().describe("Phone ID of the participant to add"),
+        participantId: z.string().describe("WhatsApp ID of the participant to add (e.g. 5511999999999@c.us)"),
       },
     },
     async ({ sessionId, groupId, participantId }) => {
       const data = await openwaClient({
         method: "POST",
-        path: `/sessions/${sessionId}/groups/${groupId}/members`,
-        body: { participantId },
+        path: `/sessions/${sessionId}/groups/${groupId}/participants`,
+        body: { participants: [participantId] },
       });
       return { content: [{ type: "text" as const, text: JSON.stringify(data, null, 2) }] };
     }
@@ -79,13 +79,14 @@ export function registerGroupTools(server: McpServer) {
       inputSchema: {
         sessionId: z.string().describe("Session ID"),
         groupId: z.string().describe("Group ID"),
-        participantId: z.string().describe("Phone ID of the participant to remove"),
+        participantId: z.string().describe("WhatsApp ID of the participant to remove (e.g. 5511999999999@c.us)"),
       },
     },
     async ({ sessionId, groupId, participantId }) => {
       const data = await openwaClient({
         method: "DELETE",
-        path: `/sessions/${sessionId}/groups/${groupId}/members/${participantId}`,
+        path: `/sessions/${sessionId}/groups/${groupId}/participants`,
+        body: { participants: [participantId] },
       });
       return { content: [{ type: "text" as const, text: JSON.stringify(data, null, 2) }] };
     }
@@ -98,13 +99,14 @@ export function registerGroupTools(server: McpServer) {
       inputSchema: {
         sessionId: z.string().describe("Session ID"),
         groupId: z.string().describe("Group ID"),
-        participantId: z.string().describe("Phone ID of the participant to promote"),
+        participantId: z.string().describe("WhatsApp ID of the participant to promote (e.g. 5511999999999@c.us)"),
       },
     },
     async ({ sessionId, groupId, participantId }) => {
       const data = await openwaClient({
         method: "POST",
-        path: `/sessions/${sessionId}/groups/${groupId}/members/${participantId}/promote`,
+        path: `/sessions/${sessionId}/groups/${groupId}/participants/promote`,
+        body: { participants: [participantId] },
       });
       return { content: [{ type: "text" as const, text: JSON.stringify(data, null, 2) }] };
     }
@@ -117,13 +119,14 @@ export function registerGroupTools(server: McpServer) {
       inputSchema: {
         sessionId: z.string().describe("Session ID"),
         groupId: z.string().describe("Group ID"),
-        participantId: z.string().describe("Phone ID of the admin to demote"),
+        participantId: z.string().describe("WhatsApp ID of the admin to demote (e.g. 5511999999999@c.us)"),
       },
     },
     async ({ sessionId, groupId, participantId }) => {
       const data = await openwaClient({
         method: "POST",
-        path: `/sessions/${sessionId}/groups/${groupId}/members/${participantId}/demote`,
+        path: `/sessions/${sessionId}/groups/${groupId}/participants/demote`,
+        body: { participants: [participantId] },
       });
       return { content: [{ type: "text" as const, text: JSON.stringify(data, null, 2) }] };
     }
@@ -142,8 +145,8 @@ export function registerGroupTools(server: McpServer) {
     async ({ sessionId, groupId, text }) => {
       const data = await openwaClient({
         method: "POST",
-        path: `/sessions/${sessionId}/groups/${groupId}/messages`,
-        body: { text },
+        path: `/sessions/${sessionId}/messages/send-text`,
+        body: { chatId: groupId, text },
       });
       return { content: [{ type: "text" as const, text: JSON.stringify(data, null, 2) }] };
     }
@@ -180,7 +183,7 @@ export function registerGroupTools(server: McpServer) {
     async ({ sessionId, groupId, subject }) => {
       const data = await openwaClient({
         method: "PUT",
-        path: `/sessions/${sessionId}/groups/${groupId}`,
+        path: `/sessions/${sessionId}/groups/${groupId}/subject`,
         body: { subject },
       });
       return { content: [{ type: "text" as const, text: JSON.stringify(data, null, 2) }] };

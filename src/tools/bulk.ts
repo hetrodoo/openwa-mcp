@@ -17,7 +17,7 @@ export function registerBulkTools(server: McpServer) {
       const data = await openwaClient({
         method: "POST",
         path: `/sessions/${sessionId}/messages/send-bulk`,
-        body: { recipients, text },
+        body: { messages: recipients.map((chatId) => ({ chatId, type: "text", content: { text } })) },
       });
       return { content: [{ type: "text" as const, text: JSON.stringify(data, null, 2) }] };
     }
@@ -38,7 +38,9 @@ export function registerBulkTools(server: McpServer) {
       const data = await openwaClient({
         method: "POST",
         path: `/sessions/${sessionId}/messages/send-bulk`,
-        body: { recipients, url, caption },
+        body: {
+          messages: recipients.map((chatId) => ({ chatId, type: "image", content: { image: { url }, caption } })),
+        },
       });
       return { content: [{ type: "text" as const, text: JSON.stringify(data, null, 2) }] };
     }

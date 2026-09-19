@@ -33,3 +33,15 @@ export async function openwaClient<T = unknown>(opts: RequestOptions): Promise<T
     return text as T;
   }
 }
+
+export async function openwaMedia(path: string): Promise<{ data: string; mimeType: string }> {
+  const res = await fetch(`${BASE_URL}${path}`, { headers: { "X-API-Key": API_KEY } });
+
+  if (!res.ok) {
+    throw new Error(`OpenWA API ${res.status}: ${await res.text()}`);
+  }
+
+  const mimeType = res.headers.get("content-type")?.split(";")[0].trim() || "application/octet-stream";
+  const data = Buffer.from(await res.arrayBuffer()).toString("base64");
+  return { data, mimeType };
+}

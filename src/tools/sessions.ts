@@ -94,7 +94,7 @@ export function registerSessionTools(server: McpServer) {
       },
     },
     async ({ sessionId }) => {
-      const data = await openwaClient({ method: "GET", path: `/sessions/${sessionId}/status` });
+      const data = await openwaClient({ method: "GET", path: `/sessions/${sessionId}` });
       return { content: [{ type: "text" as const, text: JSON.stringify(data, null, 2) }] };
     }
   );

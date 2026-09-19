@@ -20,17 +20,20 @@ export function registerLabelTools(server: McpServer) {
   server.registerTool(
     "create_label",
     {
-      description: "Create a new label/tag for organizing WhatsApp chats",
+      description:
+        "Create or update a label/tag for organizing WhatsApp chats (WhatsApp Business on the Baileys engine only). " +
+        "Pick an unused label ID to create; an existing ID is overwritten.",
       inputSchema: {
         sessionId: z.string().describe("Session ID"),
+        labelId: z.string().describe("Label ID, chosen by the caller"),
         name: z.string().describe("Label name"),
-        color: z.string().optional().describe("Label color hex code"),
+        color: z.number().int().min(0).max(19).optional().describe("WhatsApp label color index (0-19)"),
       },
     },
-    async ({ sessionId, name, color }) => {
+    async ({ sessionId, labelId, name, color }) => {
       const data = await openwaClient({
-        method: "POST",
-        path: `/sessions/${sessionId}/labels`,
+        method: "PUT",
+        path: `/sessions/${sessionId}/labels/${labelId}`,
         body: { name, color },
       });
       return { content: [{ type: "text" as const, text: JSON.stringify(data, null, 2) }] };
@@ -68,8 +71,8 @@ export function registerLabelTools(server: McpServer) {
     async ({ sessionId, labelId, chatId }) => {
       const data = await openwaClient({
         method: "POST",
-        path: `/sessions/${sessionId}/labels/${labelId}/chats`,
-        body: { chatId },
+        path: `/sessions/${sessionId}/labels/chat/${chatId}`,
+        body: { labelId },
       });
       return { content: [{ type: "text" as const, text: JSON.stringify(data, null, 2) }] };
     }
@@ -88,7 +91,7 @@ export function registerLabelTools(server: McpServer) {
     async ({ sessionId, labelId, chatId }) => {
       const data = await openwaClient({
         method: "DELETE",
-        path: `/sessions/${sessionId}/labels/${labelId}/chats/${chatId}`,
+        path: `/sessions/${sessionId}/labels/chat/${chatId}/${labelId}`,
       });
       return { content: [{ type: "text" as const, text: JSON.stringify(data, null, 2) }] };
     }

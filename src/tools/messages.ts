@@ -59,7 +59,7 @@ export function registerMessageTools(server: McpServer) {
     async ({ sessionId, chatId, url, filename, caption }) => {
       const data = await openwaClient({
         method: "POST",
-        path: `/sessions/${sessionId}/messages/send-file`,
+        path: `/sessions/${sessionId}/messages/send-document`,
         body: { chatId, url, filename, caption },
       });
       return { content: [{ type: "text" as const, text: JSON.stringify(data, null, 2) }] };
@@ -115,14 +115,14 @@ export function registerMessageTools(server: McpServer) {
         sessionId: z.string().describe("Session ID"),
         chatId: z.string().describe("Chat ID containing the message"),
         messageId: z.string().describe("ID of the message to react to"),
-        reaction: z.string().describe("Emoji reaction (e.g. 👍, ❤️, 😂)"),
+        emoji: z.string().describe("Emoji reaction (e.g. 👍, ❤️, 😂); empty string removes the reaction"),
       },
     },
-    async ({ sessionId, chatId, messageId, reaction }) => {
+    async ({ sessionId, chatId, messageId, emoji }) => {
       const data = await openwaClient({
         method: "POST",
         path: `/sessions/${sessionId}/messages/react`,
-        body: { chatId, messageId, reaction },
+        body: { chatId, messageId, emoji },
       });
       return { content: [{ type: "text" as const, text: JSON.stringify(data, null, 2) }] };
     }
@@ -135,12 +135,14 @@ export function registerMessageTools(server: McpServer) {
       inputSchema: {
         sessionId: z.string().describe("Session ID"),
         chatId: z.string().describe("Chat ID to fetch messages from"),
+        limit: z.number().int().min(1).max(100).optional().describe("Max messages to return (default 50)"),
       },
     },
-    async ({ sessionId, chatId }) => {
+    async ({ sessionId, chatId, limit }) => {
+      const query = limit ? `?limit=${limit}` : "";
       const data = await openwaClient({
         method: "GET",
-        path: `/sessions/${sessionId}/chats/${chatId}/messages`,
+        path: `/sessions/${sessionId}/messages/${encodeURIComponent(chatId)}/history${query}`,
       });
       return { content: [{ type: "text" as const, text: JSON.stringify(data, null, 2) }] };
     }
@@ -152,13 +154,15 @@ export function registerMessageTools(server: McpServer) {
       description: "Delete a specific message from a WhatsApp chat",
       inputSchema: {
         sessionId: z.string().describe("Session ID"),
+        chatId: z.string().describe("Chat ID containing the message"),
         messageId: z.string().describe("ID of the message to delete"),
       },
     },
-    async ({ sessionId, messageId }) => {
+    async ({ sessionId, chatId, messageId }) => {
       const data = await openwaClient({
-        method: "DELETE",
-        path: `/sessions/${sessionId}/messages/${messageId}`,
+        method: "POST",
+        path: `/sessions/${sessionId}/messages/delete`,
+        body: { chatId, messageId },
       });
       return { content: [{ type: "text" as const, text: JSON.stringify(data, null, 2) }] };
     }

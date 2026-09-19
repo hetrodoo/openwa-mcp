@@ -2,13 +2,13 @@
 
 <p align="center">
   <a href="https://github.com/rmyndharis/OPENWA"><img src="https://img.shields.io/badge/OpenWA_API-Integration-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" alt="OpenWA Integration"></a>
-  <img src="https://img.shields.io/badge/MCP_Tools-44-blue?style=for-the-badge&logo=android" alt="44 MCP Tools">
+  <img src="https://img.shields.io/badge/MCP_Tools-43-blue?style=for-the-badge&logo=android" alt="43 MCP Tools">
   <img src="https://img.shields.io/badge/TypeScript-5.x-blue?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript 5.x">
   <img src="https://img.shields.io/badge/Node.js-22%2B-green?style=for-the-badge&logo=node.js&logoColor=white" alt="Node.js 22+">
   <img src="https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge" alt="License MIT">
 </p>
 
-An enterprise-grade Model Context Protocol (MCP) server that seamlessly wraps the powerful [OpenWA](https://github.com/rmyndharis/OPENWA) WhatsApp REST API. It exposes **44 robust tools** over standard I/O (stdio) transport, enabling any MCP-compatible AI assistant (such as Cursor, Claude Desktop, Cline, and Antigravity) to securely manage WhatsApp sessions, dispatch multi-format messages, control group participants, search contacts, manage tag labels, and setup callbacks in real-time.
+An enterprise-grade Model Context Protocol (MCP) server that seamlessly wraps the powerful [OpenWA](https://github.com/rmyndharis/OPENWA) WhatsApp REST API. It exposes **43 robust tools** over standard I/O (stdio) transport, enabling any MCP-compatible AI assistant (such as Cursor, Claude Desktop, Cline, and Antigravity) to securely manage WhatsApp sessions, dispatch multi-format messages, control group participants, search contacts, manage tag labels, and setup callbacks in real-time.
 
 ---
 
@@ -46,7 +46,7 @@ An enterprise-grade Model Context Protocol (MCP) server that seamlessly wraps th
 
 ## ✨ Features
 
-- **44 Built-in Tools**: Comprehensive control over the entire WhatsApp ecosystem.
+- **43 Built-in Tools**: Comprehensive control over the entire WhatsApp ecosystem.
 - **Robust Zod Validation**: Pure, declarative parameter validation on every request.
 - **Zero-Poll Webhooks**: Simple callbacks to receive instant WhatsApp events directly.
 - **Multi-Session Native Engine**: Manage multiple phone accounts under a single server wrapper.
@@ -238,7 +238,7 @@ Create `.vscode/mcp.json` inside your local workspace:
 
 ---
 
-## 🧰 WhatsApp Tool Catalog (44 Total)
+## 🧰 WhatsApp Tool Catalog (43 Total)
 
 All tool schemas are structured logically using modular TypeScript domains under `src/tools/`.
 
@@ -258,12 +258,12 @@ All tool schemas are structured logically using modular TypeScript domains under
 |---|---|---|
 | `send_text` | `chatId`, `text` | Dispatches a plaintext message to a contact/group |
 | `send_image` | `chatId`, `url`, `caption` | Fetches and sends an image from a URL |
-| `send_file` | `chatId`, `url`, `fileName` | Sends document files (PDFs, docs) from a URL |
+| `send_file` | `chatId`, `url`, `filename` | Sends document files (PDFs, docs) from a URL |
 | `send_audio` | `chatId`, `url` | Sends audio file streams directly to a target chat |
 | `send_video` | `chatId`, `url`, `caption` | Sends high-definition videos from web URLs |
-| `react_to_message` | `messageId`, `emoji` | Attaches a quick emoji reaction to a message |
-| `get_messages` | `chatId`, `count` | Retrieves historical context and message logs |
-| `delete_message` | `messageId` | Deletes/revokes a message for everyone |
+| `react_to_message` | `chatId`, `messageId`, `emoji` | Attaches a quick emoji reaction to a message |
+| `get_messages` | `chatId`, `limit` | Reads recent chat history live from WhatsApp |
+| `delete_message` | `chatId`, `messageId` | Deletes/revokes a message for everyone |
 
 ### 🚀 Bulk Campaigns (2)
 | Tool | Params | Description |
@@ -307,16 +307,15 @@ All tool schemas are structured logically using modular TypeScript domains under
 | Tool | Params | Description |
 |---|---|---|
 | `get_labels` | None | Fetches all custom label classifications |
-| `create_label` | `name`, `color` | Creates a new colored tag label |
+| `create_label` | `labelId`, `name`, `color` | Creates or updates a colored tag label (Baileys only) |
 | `delete_label` | `labelId` | Removes a custom label classification |
 | `add_label_to_chat` | `chatId`, `labelId` | Adds a label classification to a chat thread |
 | `remove_label_from_chat` | `chatId`, `labelId` | Removes a label classification from a chat thread |
 
-### 📦 Media Assets (2)
+### 📦 Media Assets (1)
 | Tool | Params | Description |
 |---|---|---|
-| `get_media` | `messageId` | Downloads media files stored inside a message |
-| `upload_media` | `fileContentBase64` | Caches media on the server to prevent redelivery |
+| `get_media` | `chatId`, `messageId` | Downloads media files stored inside a message |
 
 ---
 

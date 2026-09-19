@@ -42,7 +42,7 @@ export function registerContactTools(server: McpServer) {
       },
     },
     async ({ sessionId, phone }) => {
-      const data = await openwaClient({ method: "GET", path: `/sessions/${sessionId}/contacts/${phone}/check` });
+      const data = await openwaClient({ method: "GET", path: `/sessions/${sessionId}/contacts/check/${phone}` });
       return { content: [{ type: "text" as const, text: JSON.stringify(data, null, 2) }] };
     }
   );
@@ -57,7 +57,7 @@ export function registerContactTools(server: McpServer) {
       },
     },
     async ({ sessionId, contactId }) => {
-      const data = await openwaClient({ method: "GET", path: `/sessions/${sessionId}/contacts/${contactId}/picture` });
+      const data = await openwaClient({ method: "GET", path: `/sessions/${sessionId}/contacts/${contactId}/profile-picture` });
       return { content: [{ type: "text" as const, text: JSON.stringify(data, null, 2) }] };
     }
   );
@@ -87,7 +87,7 @@ export function registerContactTools(server: McpServer) {
       },
     },
     async ({ sessionId, contactId }) => {
-      const data = await openwaClient({ method: "POST", path: `/sessions/${sessionId}/contacts/${contactId}/unblock` });
+      const data = await openwaClient({ method: "DELETE", path: `/sessions/${sessionId}/contacts/${contactId}/block` });
       return { content: [{ type: "text" as const, text: JSON.stringify(data, null, 2) }] };
     }
   );

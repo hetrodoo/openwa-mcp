@@ -24,7 +24,9 @@ export function registerWebhookTools(server: McpServer) {
       inputSchema: {
         sessionId: z.string().describe("Session ID"),
         url: z.string().describe("Webhook endpoint URL"),
-        events: z.array(z.string()).describe("Array of event types to subscribe to"),
+        events: z
+          .array(z.string())
+          .describe("Event types to subscribe to, e.g. message.received, message.sent, message.ack, session.status, or * for all"),
         secret: z.string().optional().describe("Optional webhook signing secret"),
       },
     },
@@ -64,7 +66,10 @@ export function registerWebhookTools(server: McpServer) {
         sessionId: z.string().describe("Session ID"),
         webhookId: z.string().describe("Webhook ID to update"),
         url: z.string().optional().describe("New webhook endpoint URL"),
-        events: z.array(z.string()).optional().describe("Updated event types"),
+        events: z
+          .array(z.string())
+          .optional()
+          .describe("Updated event types, e.g. message.received, message.sent, message.ack, session.status, or * for all"),
         secret: z.string().optional().describe("Updated signing secret"),
       },
     },
